@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Brewday Calculations</title>
+        <style>
+            h3 {
+                color:white;
+                background-color:darkturquoise;
+                width: 530px;
+            }
+            #lbs {
+                background-color:yellow;
+            }
+            #ounces {
+                background-color:yellow;
+
+            }
+            #clrEntry {
+                margin-left: 57px;
+
+            }
+            #sg {
+                margin-left: 5px;
+                width: 7em;
+            }
+            #currentT {
+                margin-left: 34px;
+                width: 7em;
+            }
+            #calibT {
+                margin-left: 15px;
+                width: 7em;
+            }
+            #adSG {
+                margin-left: 70px;
+                width: 7em;
+                background-color:yellow;
+            }
+            #eSG {
+                margin-left: 15px;
+                width: 7em;
+            }
+            #dSG {
+                margin-left: 18px;
+                width: 7em;
+            }
+            #volume {
+                margin-left: 51px;
+                width: 7em;
+            }
+            #volAdd {
+                margin-left: 12px;
+                width: 7em;
+                background-color:yellow;
+            }
+        </style>
+    </head>
+
+    <body style="background-color:aquamarine">
+
+        <h3> Enter a Temperature in Either Box to Convert:</h3> <br>
+
+        Fahrenheit: <input type="number" id="fah" style="width: 7em" onkeyup="convertToC()"> &nbsp; &nbsp;
+        Celsius: <input type="number" id="cel" style="width: 7em" onkeyup ="convertToF ()"> &nbsp; &nbsp;  &nbsp;
+
+        <button onclick="clearEntries()">Clear Entries</button>
+        <br> <br>
+
+
+
+        <h3> Enter a Volume in Either Box to Convert:</h3> <br>
+
+        U.S. Gallons: <input type="number" id="usGal" style="width: 7em" onkeyup="convertToLit()"> &nbsp; &nbsp;
+        Liters: <input type="number" id="Lit" style="width: 7em" onkeyup ="convertToGal()">
+        &nbsp; &nbsp;  &nbsp;
+
+        <button onclick="clearEntriesVol()">Clear Entries</button>
+        <br> <br>
+
+
+
+        <h3> Enter Number of Pounds as a Decimal in Left Box:</h3> <br>
+
+        Pounds: <input type="number" id="lbsDec" style="width: 7em" onkeyup="calculateWeight()"> &nbsp; = &nbsp;
+        <input type="number" id="lbs" readonly style="width: 7em"> Pounds &nbsp; + &nbsp;<input type="number" id="ounces" readonly style="width: 7em"> Ounces
+        <br> <br>
+
+        <button id="clrEntry" onclick="clearEntriesWeight()">Clear Entries</button>
+        <br> <br>
+
+
+
+        <h3> Hydrometer Temperature Correction</h3> <br>
+
+        Specific Gravity Reading: <input type="number" id="sg" value=1.0> Usually 1.0xx <br> <br>
+        Current Temperature: <input type="number" id="currentT"> <sup>0</sup>F <br> <br>
+        Calibration Temperature:<input type="number" id="calibT" value=60> <sup>0 </sup>F (usually 60)<br> <br>
+        <strong>Adjusted S.G.: </strong> <input type="number" id="adSG" readonly>
+        <button onclick="calculateSG()">Calculate</button> &nbsp; &nbsp;
+        <button onclick="clearSGEntries()">Clear Entries</button>
+            <br> <br>
+
+
+
+        <h3> Post-Boil Specific Gravity Adjustment</h3> <br>
+
+        Existing S.G.: <input type="number" id="eSG" style="width: 7em" value=1.0> Usually 1.0xx (Calibrated for 60 <sup>0</sup>F) <br> <br>
+        Desired S.G.: <input type="number" id="dSG" style="width: 7em" value=1.0> Usually 1.0xx <br> <br>
+        Volume: <input type="number" id="volume" style="width: 7em"> Liters <br> <br>
+        <strong>Liters to add: </strong> <input type="number" id="volAdd" readonly style="width: 7em">
+        <button onclick="calculateSGadj()">Calculate</button> &nbsp; &nbsp;
+        <button onclick="clearSGEntriesAdj()">Clear Entries</button>
+        <br> <br>
+
+
+
+        <script>
+            function clearEntries() {
+                document.getElementById("fah").value = "";
+                document.getElementById("fah").style.backgroundColor="white";
+                document.getElementById("cel").value = "";
+                document.getElementById("cel").style.backgroundColor="white";
+            }
+
+            function clearEntriesVol() {
+                document.getElementById("usGal").value = "";
+                document.getElementById("usGal").style.backgroundColor="white";
+                document.getElementById("Lit").value = "";
+                document.getElementById("Lit").style.backgroundColor="white";
+            }
+
+            function clearEntriesWeight() {
+                document.getElementById("lbsDec").value = "";
+                document.getElementById("lbs").value = "";
+                document.getElementById("ounces").value = "";
+            }
+
+            function clearSGEntries() {
+                document.getElementById("sg").value = "1.0";
+                document.getElementById("currentT").value = "";
+                document.getElementById("adSG").value = "";
+            }
+
+
+            function clearSGEntriesAdj() {
+                document.getElementById("eSG").value = "1.0";
+                document.getElementById("dSG").value = "1.0";
+                document.getElementById("volume").value = "";
+                document.getElementById("volAdd").value = "";
+            }
+
+            function convertToC() {
+                var x = document.getElementById("fah").value;
+                x = (parseFloat(x)- 32) * (5/9);
+                y = x.toFixed(2);
+                document.getElementById("cel").value = x.toFixed(2) ;
+                document.getElementById("cel").style.backgroundColor="yellow";
+            }
+
+
+            function convertToF() {
+                var x = document.getElementById("cel").value;
+                x = (parseFloat(x) * (9/5) + 32);
+                document.getElementById("fah").value = x.toFixed(2) ;
+                document.getElementById("fah").style.backgroundColor="yellow";
+            }
+
+            function convertToLit() {
+                var t = document.getElementById("usGal").value;
+                var u = t*3.785411784 ;
+                document.getElementById("Lit").value = u.toFixed(2) ;
+                document.getElementById("Lit").style.backgroundColor="yellow";
+            }
+
+             function convertToGal() {
+                var v = document.getElementById("Lit").value;
+                var w = v*0.264172052 ;
+                document.getElementById("usGal").value = w.toFixed(2) ;
+                document.getElementById("usGal").style.backgroundColor="yellow";
+            }
+
+            function calculateWeight() {
+                var k = document.getElementById("lbsDec").value;
+                var l = Math.floor(k);
+                document.getElementById("lbs").value = l;
+                var m = (k - l)*16;
+                document.getElementById("ounces").value = m.toFixed(2);
+            }
+
+            function calculateSG() {
+                var a = document.getElementById("sg").value;
+                var b = document.getElementById("currentT").value;
+                var c = document.getElementById("calibT").value;
+                var d = a*((1.00130346-0.000134722124*b+0.00000204052596*b**2-0.00000000232820948*b**3)/(1.00130346-0.000134722124*c+0.00000204052596*c**2-0.00000000232820948*c**3));
+                document.getElementById("adSG").value = d.toFixed(3) ;
+            }
+
+            function calculateSGadj() {
+                var g = document.getElementById("eSG").value;
+                g = (g-1)*10000;
+                var h = document.getElementById("dSG").value;
+                h = (h-1)*10000;
+                var i = document.getElementById("volume").value;
+                i = parseFloat(i);
+                var j = ((g/h)*i)-i;
+                document.getElementById("volAdd").value = j.toFixed(2);
+            }
+
+        </script>
+
+    </body>
+</html>
